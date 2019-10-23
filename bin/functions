@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+set -e -u
+
+CACHE_DIR="/tmp/asdf-sbcl.cache"
+mkdir -p ${CACHE_DIR}
+
+case $(uname -s) in
+    Darwin) OS="darwin"
+            STAT="stat -f %c ${CACHE_DIR}/*"
+            TEMP_DIR=$(mktemp -dt asdf-sbcl)
+            ;;
+    Linux) OS="linux"
+           STAT="stat -c %Z ${CACHE_DIR}/*"
+           TEMP_DIR=$(mktemp -dp /tmp asdf-sbcl.XXXXXXXX)
+           ;;
+esac
+
+case ${GITHUB_PAT} in
+    "") CURL_AUTH="" ;;
+    *) CURL_AUTH="Authorization: token ${GITHUB_PAT}" ;;
+esac
+
+function check-jq() {
+  bold=`tput bold`
+  nc=`tput sgr0`
+  USAGE="Install ${bold}jq${nc} to continue. Aborting."
+
+  if ! [ -x "$(command -v jq)" ]; then
+    printf "$USAGE" >&2
+    exit 1;
+  fi
+}
+
+trap "cd ${PWD}; rm -rf ${TEMP_DIR}" EXIT
+
+function retrieve-tags {
+    LAST=$(curl -Ss -I -H "${CURL_AUTH}" https://api.github.com/repos/sbcl/sbcl/tags |
+           perl -n -e'/page=\d+.*page=(\d+)/ && print $1')
+    for i in $(seq ${LAST})
+    do
+        curl -Ss -H "${CURL_AUTH}" https://api.github.com/repos/sbcl/sbcl/tags?page=$i
+    done
+}
+
+function retrieve-json {
+    if [[ ! -e "${CACHE_DIR}/asdf-sbcl.json" ]] || [[ $(set -- $(${STAT}) && echo ${1}) -le $(( `date +%s` - 3600)) ]]
+    then
+        VERSIONS='add | map(select(.name | test("^sbcl-[0-9]"))) | .[].name |= sub("^sbcl-";"")'
+        retrieve-tags | jq -s "${VERSIONS}" > ${CACHE_DIR}/asdf-sbcl.json
+    fi
+}
+
+function install-bootstrap {
+    if [[ ! -e "${CACHE_DIR}/bootstrap/bin/sbcl" ]]
+    then
+        COMPILER="https://sourceforge.net/projects/sbcl/files/sbcl/1.1.6/sbcl-1.1.6-x86-64-${OS}-binary.tar.bz2/download"
+        curl -Lo ${TEMP_DIR}/bootstrap.tar.bz2 -C - ${COMPILER}
+        mkdir -p ${TEMP_DIR}/bootstrap-installer ${CACHE_DIR}/bootstrap
+        tar -xvf ${TEMP_DIR}/bootstrap.tar.bz2 -C ${TEMP_DIR}/bootstrap-installer --strip-components 1 || exit 1
+        (cd ${TEMP_DIR}/bootstrap-installer &&
+             INSTALL_ROOT=${CACHE_DIR}/bootstrap sh install.sh)
+    fi
+}
+
+function list-all {
+    retrieve-json
+    jq -r '.[].name' ${CACHE_DIR}/asdf-sbcl.json |
+        sort -t. -k 1,1n -k 2,2n -k 3,3n |
+        tr '\n' ' '
+}
+
+function install {
+    install-bootstrap
+    SHA_QUERY=".[] | select(.name == \"${ASDF_INSTALL_VERSION}\") | .commit.sha"
+    SHA=$(jq -r "${SHA_QUERY}" ${CACHE_DIR}/asdf-sbcl.json)
+    echo "sha: ${SHA}"
+
+    if [[ ! -d "${CACHE_DIR}/sbcl/.git" ]]
+    then
+        git -C ${CACHE_DIR} clone https://github.com/sbcl/sbcl.git
+    fi
+
+    (cd ${CACHE_DIR}/sbcl &&
+         git fetch --all &&
+         git checkout ${SHA} &&
+         PATH=${CACHE_DIR}/bootstrap/bin:${PATH} INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${CACHE_DIR}/bootstrap/lib/sbcl sh make.sh &&
+         INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh)
+}
+
+case `basename ${0}` in
+    list-all) check-jq && list-all
+              ;;
+    install) check-jq && install
+             ;;
+esac
