@@ -3,7 +3,7 @@
 Steel Bank Common Lisp plugin for [asdf](https://github.com/asdf-vm/asdf) version manager.
 
 This plugin compiles from source... so it takes awhile, but it does let you run the exact version
-that you want to run instead of whatever is published.  Be aware that it installs a temporary binary version of sbcl to use as the compiler for the version you actually want to run.  It's meta and it cleans up after itself!
+that you want to run instead of whatever is published.  You are going to need to make sure you have `jq` installed though, so do that however your package manager requires.
 
 ## Install
 
