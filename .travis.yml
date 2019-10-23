@@ -3,8 +3,9 @@ script: asdf plugin-test sbcl https://github.com/smashedtoatoms/asdf-sbcl.git --
 before_script:
   - git clone https://github.com/asdf-vm/asdf.git
   - . asdf/asdf.sh
-os:
-  - linux
-  - os: osx
+matrix:
+  include:
+    - os: linux
+    - os: osx
       install: HOMEBREW_NO_AUTO_UPDATE=1 brew install jq
 
