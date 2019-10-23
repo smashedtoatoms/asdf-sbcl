@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e -u
 
 CACHE_DIR="/tmp/asdf-sbcl.cache"
 mkdir -p ${CACHE_DIR}
@@ -25,9 +24,10 @@ function check-jq() {
   nc=`tput sgr0`
   USAGE="Install ${bold}jq${nc} to continue. Aborting."
 
-  if ! [ -x "$(command -v jq)" ]; then
+  if ! [ -x "$(command -v jq)" ]
+  then
     printf "$USAGE" >&2
-    exit 1;
+    exit 1
   fi
 }
 
@@ -57,8 +57,8 @@ function install-bootstrap {
         curl -Lo ${TEMP_DIR}/bootstrap.tar.bz2 -C - ${COMPILER}
         mkdir -p ${TEMP_DIR}/bootstrap-installer ${CACHE_DIR}/bootstrap
         tar -xvf ${TEMP_DIR}/bootstrap.tar.bz2 -C ${TEMP_DIR}/bootstrap-installer --strip-components 1 || exit 1
-        (cd ${TEMP_DIR}/bootstrap-installer &&
-             INSTALL_ROOT=${CACHE_DIR}/bootstrap sh install.sh)
+        cd ${TEMP_DIR}/bootstrap-installer
+        INSTALL_ROOT=${CACHE_DIR}/bootstrap sh install.sh
     fi
 }
 
@@ -73,18 +73,17 @@ function install {
     install-bootstrap
     SHA_QUERY=".[] | select(.name == \"${ASDF_INSTALL_VERSION}\") | .commit.sha"
     SHA=$(jq -r "${SHA_QUERY}" ${CACHE_DIR}/asdf-sbcl.json)
-    echo "sha: ${SHA}"
 
     if [[ ! -d "${CACHE_DIR}/sbcl/.git" ]]
     then
         git -C ${CACHE_DIR} clone https://github.com/sbcl/sbcl.git
     fi
 
-    (cd ${CACHE_DIR}/sbcl &&
-         git fetch --all &&
-         git checkout ${SHA} &&
-         PATH=${CACHE_DIR}/bootstrap/bin:${PATH} INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${CACHE_DIR}/bootstrap/lib/sbcl sh make.sh &&
-         INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh)
+    cd ${CACHE_DIR}/sbcl
+    git fetch --all
+    git checkout ${SHA}
+    PATH=${CACHE_DIR}/bootstrap/bin:${PATH} INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${CACHE_DIR}/bootstrap/lib/sbcl sh make.sh &&
+    INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh
 }
 
 case `basename ${0}` in
