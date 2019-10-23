@@ -4,11 +4,13 @@ CACHE_DIR="/tmp/asdf-sbcl.cache"
 mkdir -p ${CACHE_DIR}
 
 case $(uname -s) in
-    Darwin) OS="darwin"
+    Darwin) BOOTSTRAP_COMPILER="https://github.com/emotiq/sbcl-binaries/releases/download/1.4.8/sbcl-1.4.8-x86-64-darwin-binary.tar.bz2"
+            OS="darwin"
             STAT="stat -f %c ${CACHE_DIR}/*"
             TEMP_DIR=$(mktemp -dt asdf-sbcl)
             ;;
-    Linux) OS="linux"
+    Linux) BOOTSTRAP_COMPILER="https://github.com/emotiq/sbcl-binaries/releases/download/1.4.8/sbcl-1.4.8-x86-64-linux-binary.tar.bz2"
+           OS="linux"
            STAT="stat -c %Z ${CACHE_DIR}/*"
            TEMP_DIR=$(mktemp -dp /tmp asdf-sbcl.XXXXXXXX)
            ;;
@@ -53,8 +55,7 @@ function retrieve-json {
 function install-bootstrap {
     if [[ ! -e "${CACHE_DIR}/bootstrap/bin/sbcl" ]]
     then
-        COMPILER="https://sourceforge.net/projects/sbcl/files/sbcl/1.1.6/sbcl-1.1.6-x86-64-${OS}-binary.tar.bz2/download"
-        curl -Lo ${TEMP_DIR}/bootstrap.tar.bz2 -C - ${COMPILER}
+        curl -Lo ${TEMP_DIR}/bootstrap.tar.bz2 -C - ${BOOTSTRAP_COMPILER}
         mkdir -p ${TEMP_DIR}/bootstrap-installer ${CACHE_DIR}/bootstrap
         tar -xvf ${TEMP_DIR}/bootstrap.tar.bz2 -C ${TEMP_DIR}/bootstrap-installer --strip-components 1 || exit 1
         cd ${TEMP_DIR}/bootstrap-installer
