@@ -2,27 +2,32 @@
 
 Steel Bank Common Lisp plugin for [asdf](https://github.com/asdf-vm/asdf) version manager.
 
-This plugin compiles from source... so it takes awhile, but it does let you run the exact version
-that you want to run instead of whatever is published.  You are going to need to make sure you have
-`jq` installed though, so do that however your package manager requires.
+This plugin compiles SBCL from source. Depending on the speed of your
+system, this can take some time. In return, it will give you the
+flexibility to run and manage versions of SBCL you'd like to run,
+which will liberate you from the often outdated packages published for
+your system.
+
+## Requirements
+- [jq](https://stedolan.github.io/jq/)
+- [curl](https://curl.haxx.se/)
 
 ## Install
 
 ```
-asdf plugin-add sbcl https://github.com/smashedtoatoms/asdf-sbcl.git
+asdf plugin-add java https://github.com/smashedtoatoms/asdf-sbcl.git
 ```
 
-## ASDF options
+## Use
 
-Check [asdf](https://github.com/asdf-vm/asdf) readme for instructions on how to install & manage versions of Steel Bank Common Lisp.
+List candidate SBCLs:
 
-# How to use (easier version)
-## Install
-1. Create your .tool-versions file in the project that needs sbcl and add `sbcl 1.5.7` or whatever version that you want.
-2. run `asdf install`
+`asdf list-all sbcl`
 
-## Run
-1. Once it is done, run `sbcl`
-2. ???
-3. Profit!
+Install a candidate listed from the previous command like this:
 
+`asdf install sbcl 1.5.7`
+
+Select an installed candidate for use like this:
+
+`asdf global sbcl 1.5.7`
