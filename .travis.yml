@@ -5,5 +5,6 @@ before_script:
   - . asdf/asdf.sh
 os:
   - linux
-  - osx
-    install: HOMEBREW_NO_AUTO_UPDATE=1 brew install jq
+  - os: osx
+      install: HOMEBREW_NO_AUTO_UPDATE=1 brew install jq
+
