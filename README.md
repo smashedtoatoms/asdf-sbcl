@@ -15,7 +15,7 @@ your system.
 ## Install
 
 ```
-asdf plugin-add java https://github.com/smashedtoatoms/asdf-sbcl.git
+asdf plugin-add sbcl https://github.com/smashedtoatoms/asdf-sbcl.git
 ```
 
 ## Use
