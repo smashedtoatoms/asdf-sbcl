@@ -1,5 +1,5 @@
 language: c
-script: asdf plugin-test sbcl https://github.com/smashedtoatoms/asdf-sbcl.git --asdf-tool-version 1.5.7
+script: asdf plugin-test sbcl https://github.com/smashedtoatoms/asdf-sbcl.git --asdf-tool-version 2.0.0
 before_script:
   - git clone https://github.com/asdf-vm/asdf.git
   - . asdf/asdf.sh
