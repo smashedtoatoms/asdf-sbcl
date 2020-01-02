@@ -8,7 +8,16 @@ flexibility to run and manage versions of SBCL you'd like to run,
 which will liberate you from the often outdated packages published for
 your system.
 
+It also installs [quicklisp](https://www.quicklisp.org/beta/) and
+[qlot](https://github.com/fukamachi/qlot) for the installed lisp because I am
+tired of messing with something that should be part of the default install.
+Every version of sbcl that you install will get its own associated quicklisp
+and qlot that is not shared across installs. If you need their installation
+to be configurable, let me know. As of now, I think I am the only person
+using this.
+
 ## Requirements
+
 - [jq](https://stedolan.github.io/jq/)
 - [curl](https://curl.haxx.se/)
 
@@ -26,8 +35,8 @@ List candidate SBCLs:
 
 Install a candidate listed from the previous command like this:
 
-`asdf install sbcl 1.5.7`
+`asdf install sbcl 2.0.0`
 
 Select an installed candidate for use like this:
 
-`asdf global sbcl 1.5.7`
+`asdf global sbcl 2.0.0`
