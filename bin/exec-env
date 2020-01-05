@@ -5,9 +5,3 @@ if [ "$SBCL_HOME" = "" ]; then
 else
   export SBCL_HOME="$SBCL_HOME"
 fi
-
-if [ "$QUICKLISP_HOME" = "" ]; then
-  export QUICKLISP_HOME="$ASDF_INSTALL_PATH/quicklisp"
-else
-  export QUICKLISP_HOME="$QUICKLISP_HOME"
-fi

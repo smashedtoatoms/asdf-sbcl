@@ -87,41 +87,9 @@ function install {
     INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh
 }
 
-function install-quicklisp {
-    curl -o /tmp/ql.lisp http://beta.quicklisp.org/quicklisp.lisp
-    SBCL_HOME="$ASDF_INSTALL_PATH/lib/sbcl" ${ASDF_INSTALL_PATH}/bin/sbcl --no-sysinit --no-userinit --load /tmp/ql.lisp \
-        --eval '(quicklisp-quickstart:install :path (concatenate '"'"'string (sb-unix::posix-getenv "ASDF_INSTALL_PATH") "/quicklisp"))' \
-        --quit
-    rm -rf /tmp/ql.lisp
-
-    SBCLRC=~/.sbclrc
-    if [ ! -f "$SBCLRC" ]; then
-        echo ';;; The following lines were added by asdf-sbcl' >> $SBCLRC
-        echo ';;; QUICKLISP_HOME environment variable is set by asdf-sbcl upon running of sbcl' >> $SBCLRC
-        echo '#-quicklisp' >> $SBCLRC
-        echo '(let ((quicklisp-init (concatenate' >> $SBCLRC
-        echo '                       '"'"'string' >> $SBCLRC
-        echo '                       (sb-unix::posix-getenv "QUICKLISP_HOME")' >> $SBCLRC
-        echo '                       "/setup.lisp")))' >> $SBCLRC
-        echo '  (when (probe-file quicklisp-init)' >> $SBCLRC
-        echo '    (load quicklisp-init)))' >> $SBCLRC
-        echo '' >> $SBCLRC
-    fi
-}
-
-function install-qlot {
-    SBCLRC=~/.sbclrc
-    if [ -f "$SBCLRC" ]; then
-        SBCL_HOME="$ASDF_INSTALL_PATH/lib/sbcl" ${ASDF_INSTALL_PATH}/bin/sbcl \
-        --eval '(load (concatenate '"'"'string (sb-unix::posix-getenv "ASDF_INSTALL_PATH") "/quicklisp/setup.lisp"))' \
-        --eval '(ql:quickload :qlot)' \
-        --quit
-    fi
-}
-
 case `basename ${0}` in
     list-all) check-jq && list-all
               ;;
-    install) check-jq && install && install-quicklisp && install-qlot
+    install) check-jq && install
              ;;
 esac
