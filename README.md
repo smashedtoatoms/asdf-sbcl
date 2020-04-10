@@ -32,3 +32,10 @@ Install a candidate listed from the previous command like this:
 Select an installed candidate for use like this:
 
 `asdf global sbcl 2.0.0`
+
+## Custom compile flags
+
+The default install will use `--with-sb-core-compression` so that you can create freestanding images for distribution.
+If you want different compile-time flags, you can set them by using the following syntax on install:
+
+`SBCL_CONFIGURE_OPTIONS="--with-sb-core-compression --with-sb-thread" asdf install sbcl 2.0.3`

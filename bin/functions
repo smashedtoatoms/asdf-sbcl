@@ -70,10 +70,21 @@ function list-all {
         tr '\n' ' '
 }
 
+function construct_configure_options {
+  if [ "$SBCL_CONFIGURE_OPTIONS" = "" ]; then
+    local configure_options="--with-sb-core-compression"
+  else
+    local configure_options="$SBCL_CONFIGURE_OPTIONS"
+  fi
+
+  echo "$configure_options"
+}
+
 function install {
     install-bootstrap
     SHA_QUERY=".[] | select(.name == \"${ASDF_INSTALL_VERSION}\") | .commit.sha"
     SHA=$(jq -r "${SHA_QUERY}" ${CACHE_DIR}/asdf-sbcl.json)
+    local configure_options="$(construct_configure_options)"
 
     if [[ ! -d "${CACHE_DIR}/sbcl/.git" ]]
     then
@@ -83,7 +94,7 @@ function install {
     cd ${CACHE_DIR}/sbcl
     git fetch --all
     git checkout ${SHA}
-    PATH=${CACHE_DIR}/bootstrap/bin:${PATH} INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${CACHE_DIR}/bootstrap/lib/sbcl sh make.sh --with-sb-core-compression &&
+    PATH=${CACHE_DIR}/bootstrap/bin:${PATH} INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${CACHE_DIR}/bootstrap/lib/sbcl sh make.sh ${configure_options} &&
     INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh
 }
 
