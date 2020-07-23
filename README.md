@@ -6,7 +6,15 @@ This plugin compiles SBCL from source. Depending on the speed of your
 system, this can take some time. In return, it will give you the
 flexibility to run and manage versions of SBCL you'd like to run,
 which will liberate you from the often outdated packages published for
-your system.
+your system.  
+
+Since creating this project, I have discovered that 
+[roswell](https://github.com/roswell/roswell) is actually a better
+way to manage common lisp for me, so this project will probably be
+a little neglected going forward.  I recommend roswell for managing
+lisp versions.  It coupled with [qlot](https://github.com/fukamachi/qlot)
+is a very elegant way to handle cross-platform installs and get
+repeatable builds.
 
 ## Requirements
 
