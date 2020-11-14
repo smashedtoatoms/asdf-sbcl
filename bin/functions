@@ -72,7 +72,7 @@ function list-all {
 
 function construct_configure_options {
   if [ "$SBCL_CONFIGURE_OPTIONS" = "" ]; then
-    local configure_options="--with-sb-core-compression"
+    local configure_options="--with-sb-core-compression --with-sb-thread"
   else
     local configure_options="$SBCL_CONFIGURE_OPTIONS"
   fi
