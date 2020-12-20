@@ -2,6 +2,8 @@
 
 if [ "$SBCL_HOME" = "" ]; then
   export SBCL_HOME="$ASDF_INSTALL_PATH/lib/sbcl"
-else
-  export SBCL_HOME="$SBCL_HOME"
+fi
+
+if [ "$CLPM_CLIENT_PATH" = "" ]; then
+  export CLPM_CLIENT_PATH="$ASDF_INSTALL_PATH/lib/clpm/client/"
 fi
