@@ -1,4 +1,4 @@
-# asdf-sbcl
+# asdf-sbcl ![Build](https://github.com/smashedtoatoms/asdf-sbcl/workflows/Build/badge.svg?branch=main)
 
 Steel Bank Common Lisp plugin for [asdf](https://github.com/asdf-vm/asdf)
 version manager.
