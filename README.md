@@ -8,12 +8,12 @@ this can take some time.  In return, it will give you the flexibility to run and
 manage different versions of SBCL, which will liberate you from the often
 outdated official packages.
 
-I have found [clpm](https://www.clpm.dev/) to be incredibly
-useful (It gives you version pinning, git repo sources, quicklisp with pinning,
-hooks into ASDF elegantly, and does it all without closing over things in a way
-that forces a particular workflow or cruds up your standalone binaries).  I also
-use [lake](https://github.com/takagi/lake) as a build tool for lisp projects.  I
-am including them both by default, so you will not need to install or configure
+I have found [clpm](https://www.clpm.dev/) to be incredibly useful (It gives you
+version pinning, git repo sources, quicklisp with pinning, hooks into ASDF
+elegantly, and does it all without closing over things in a way that forces a
+particular workflow or cruds up your standalone binaries).  I also use
+[lake](https://github.com/takagi/lake) as a build tool for lisp projects.  I am
+including them both by default, so you will not need to install or configure
 either.  You can simply use them as normal command line utilities.  I HIGHLY
 recommend reading clpm's docs to get familiar with why it's amazing, and why
 everyone should be using it.
