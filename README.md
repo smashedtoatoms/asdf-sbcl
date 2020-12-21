@@ -8,10 +8,12 @@ this can take some time.  In return, it will give you the flexibility to run and
 manage different versions of SBCL, which will liberate you from the often
 outdated official packages.
 
-I have found [clpm](https://gitlab.common-lisp.net/clpm/clpm) to be incredibly
-useful (it uses quicklisp and ASDF very elegantly under the hood).  I also use
-[lake](https://github.com/takagi/lake) as a build tool for lisp projects.  I am
-including them both by default, so you will not need to install or configure
+I have found [clpm](https://common-lisp.net/project/clpm/docs/) to be incredibly
+useful (It gives you version pinning, git repo sources, quicklisp with pinning,
+hooks into ASDF elegantly, and does it all without closing over things in a way
+that forces a particular workflow or cruds up your standalone binaries).  I also
+use [lake](https://github.com/takagi/lake) as a build tool for lisp projects.  I
+am including them both by default, so you will not need to install or configure
 either.  You can simply use them as normal command line utilities.  I HIGHLY
 recommend reading clpm's docs to get familiar with why it's amazing, and why
 everyone should be using it.
@@ -79,10 +81,11 @@ asdf install sbcl 2.0.11
 Sbcl will work like normal following installation; however, If you want all the
 perks, I recommend installing rlwrap and using clpm to start sbcl.
 
-- You can start a swank repl on port 4005 with `rlwrap clpm exec -- sbcl --eval
-'(asdf:load-system :swank)' --eval '(swank:create-server)'` to which you can
-then connect your editor (I use vscode with
-[Alive](https://marketplace.visualstudio.com/items?itemName=rheller.alive)).
+- You can start a swank repl on port 4005 which you can then hook an editor to (I use vscode with
+[Alive](https://marketplace.visualstudio.com/items?itemName=rheller.alive)):
+    ```
+    rlwrap clpm exec --context=your-project-name -- sbcl --eval '(asdf:load-system :swank)' --eval '(swank:create-server)'
+    ```
 - You can build a standalone binary (lake for this example) using clpm (which
   installs any required dependencies automatically and compresses the binary
   without including any unnecessary libraries in your binary) by doing something
@@ -90,10 +93,14 @@ then connect your editor (I use vscode with
     ```
     # From within the lake project...
     clpm exec --context=lake -- sbcl \
-        --eval '(defvar *asdf-system-not-found-behavior* :install)' \
+        --eval '(setf clpm-client:*asdf-system-not-found-behavior* :install)' \
+        --eval '(setf clpm-client:*context-diff-approval-method* t)' \
         --eval '(asdf:load-system :lake)' \
         --eval "(sb-ext:save-lisp-and-die \"lake\" :toplevel #'lake/main:uiop-main :executable t :compression 9)"
     ```
+- clpm [caches files](https://common-lisp.net/project/clpm/docs/storage.html) in
+  a few different places.  If things misbehave, it doesn't hurt to blow those
+  caches with `rm -rf ~/.cache/clpm ~/.local/share/clpm`
 
 ## Possible issues
 The addition of clpm and lake is relatively new.  clpm is configured to use the
