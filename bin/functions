@@ -142,10 +142,11 @@ function install_lake() {
     # Will probably need a way to specify the lake version at some point
     git clone https://github.com/takagi/lake.git $TEMP_DIR/lake
     cd $TEMP_DIR/lake
-    INSTALL_ROOT=${ASDF_INSTALL_PATH} \
-        SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl \
+    PATH=$PATH:$ASDF_INSTALL_PATH/bin \
+        INSTALL_ROOT=$ASDF_INSTALL_PATH \
+        SBCL_HOME=$ASDF_INSTALL_PATH/lib/sbcl \
         CLPM_CLIENT_PATH="$ASDF_INSTALL_PATH/lib/clpm/client/" \
-        $ASDF_INSTALL_PATH/bin/clpm exec --context=lake -- $ASDF_INSTALL_PATH/bin/sbcl \
+        clpm exec --context=lake -- sbcl \
         --eval '(setf clpm-client:*asdf-system-not-found-behavior* :install)' \
         --eval '(setf clpm-client:*context-diff-approval-method* t)' \
         --eval '(asdf:load-system :lake)' \
