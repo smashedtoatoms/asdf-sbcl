@@ -81,8 +81,9 @@ asdf install sbcl 2.0.11
 Sbcl will work like normal following installation; however, If you want all the
 perks, I recommend installing rlwrap and using clpm to start sbcl.
 
-- You can start a swank repl on port 4005 which you can then hook an editor to (I use vscode with
-[Alive](https://marketplace.visualstudio.com/items?itemName=rheller.alive)):
+- You can start a swank repl on port 4005 which you can then hook an editor to
+  (I use vscode with
+  [Alive](https://marketplace.visualstudio.com/items?itemName=rheller.alive)):
     ```
     rlwrap clpm exec --context=your-project-name -- sbcl --eval '(asdf:load-system :swank)' --eval '(swank:create-server)'
     ```
