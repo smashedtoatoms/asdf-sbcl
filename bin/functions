@@ -91,8 +91,8 @@ function setup_sbcl_rc() {
     if grep --no-messages -qF '#-clpm-client' $HOME/.sbclrc; then
         FINAL_RESPONSE="$FINAL_RESPONSE\n  clpm - Leaving .sbclrc untouched since it already configured."
     else
-        # This does the old-school push to the *central-registry* instead of
-        # adding configuration to
+        # This performs the old-school push to the *central-registry* instead
+        # of adding configuration to
         # $HOME/.config/common-lisp/source-registry.conf.d.  This is done
         # because the source-registry method doesn't allow for dynamic config,
         # which is required for this asdf-vm implementation.  I am still
