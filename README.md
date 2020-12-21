@@ -8,7 +8,7 @@ this can take some time.  In return, it will give you the flexibility to run and
 manage different versions of SBCL, which will liberate you from the often
 outdated official packages.
 
-I have found [clpm](https://common-lisp.net/project/clpm/docs/) to be incredibly
+I have found [clpm](https://www.clpm.dev/) to be incredibly
 useful (It gives you version pinning, git repo sources, quicklisp with pinning,
 hooks into ASDF elegantly, and does it all without closing over things in a way
 that forces a particular workflow or cruds up your standalone binaries).  I also
