@@ -3,6 +3,10 @@
 Steel Bank Common Lisp plugin for [asdf](https://github.com/asdf-vm/asdf)
 version manager.
 
+Note: _This plugin currently only works on M1 macs in Rosetta mode.  Until SBCL
+officially supports it, this will be the case.  To install, you will need to run
+something like: `arch -x86_64 asdf install sbcl 2.0.11`_
+
 This plugin installs SBCL from source. Depending on the speed of your system,
 this can take some time.  In return, it will give you the flexibility to run and
 manage different versions of SBCL, which will liberate you from the often
