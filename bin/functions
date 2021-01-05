@@ -148,7 +148,7 @@ function install() {
         INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh
     FINAL_RESPONSE="$FINAL_RESPONSE\nInstalled SBCL."
     install_extras
-    ${ASDF_INSTALL_PATH}/lib/clpm exec -- ${ASDF_INSTALL_PATH}/lib/sbcl --version
+    ${ASDF_INSTALL_PATH}/bin/clpm exec -- ${ASDF_INSTALL_PATH}/bin/sbcl --version
 }
 
 case $(basename ${0}) in
