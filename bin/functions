@@ -122,33 +122,12 @@ function install_clpm() {
     setup_sbcl_rc
 }
 
-function install_lake() {
-    # Will probably need a way to specify the lake version at some point
-    git clone https://github.com/takagi/lake.git $TEMP_DIR/lake
-    cd $TEMP_DIR/lake
-    PATH=$PATH:$ASDF_INSTALL_PATH/bin \
-        INSTALL_ROOT=$ASDF_INSTALL_PATH \
-        SBCL_HOME=$ASDF_INSTALL_PATH/lib/sbcl \
-        CLPM_CLIENT_PATH="$ASDF_INSTALL_PATH/lib/clpm/client/" \
-        clpm exec --context=lake -- sbcl \
-        --eval '(setf clpm-client:*asdf-system-not-found-behavior* :install)' \
-        --eval '(setf clpm-client:*context-diff-approval-method* t)' \
-        --eval '(asdf:load-system :lake)' \
-        --eval "(sb-ext:save-lisp-and-die \"lake\" :toplevel #'lake/main:uiop-main :executable t :compression 9)"
-    mv lake $ASDF_INSTALL_PATH/bin
-    FINAL_RESPONSE="$FINAL_RESPONSE\n  Installed lake."
-}
-
 function install_extras() {
     if [ "$SKIP_INSTALLING_CLPM" = "" ]; then
         if [ "$CLPM_VERSION" = "" ]; then
             CLPM_VERSION=$DEFAULT_CLPM_VERSION
         fi
         install_clpm
-    fi
-
-    if [ "$SKIP_INSTALLING_LAKE" = "" ]; then
-        install_lake
     fi
 }
 
@@ -169,6 +148,7 @@ function install() {
         INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh
     FINAL_RESPONSE="$FINAL_RESPONSE\nInstalled SBCL."
     install_extras
+    ${ASDF_INSTALL_PATH}/lib/clpm exec -- ${ASDF_INSTALL_PATH}/lib/sbcl --version
 }
 
 case $(basename ${0}) in

@@ -15,10 +15,9 @@ outdated official packages.
 I have found [clpm](https://www.clpm.dev/) to be incredibly useful (It gives you
 version pinning, git repo sources, quicklisp with pinning, hooks into ASDF
 elegantly, and does it all without closing over things in a way that forces a
-particular workflow or cruds up your standalone binaries).  I also use
-[lake](https://github.com/takagi/lake) as a build tool for lisp projects.  I am
-including them both by default, so you will not need to install or configure
-either.  You can simply use them as normal command line utilities.  I HIGHLY
+particular workflow or cruds up your standalone binaries).  I am
+including it by default, so you will not need to install or configure
+it.  You can simply use it as normal command line utility.  I HIGHLY
 recommend reading clpm's docs to get familiar with why it's amazing, and why
 everyone should be using it.
 
@@ -68,14 +67,14 @@ SBCL_CONFIGURE_OPTIONS="--with-sb-core-compression --with-sb-thread" \
 asdf install sbcl 2.0.10
 ```
 
-## Disable CLPM and Lake
+## Disable CLPM
 
-To disable clpm and lake, you can set `SKIP_INSTALLING_CLPM=true` and
-`SKIP_INSTALLING_LAKE=true`.  For example, to install sbcl 2.0.11 with core
-compression and threading and exclude lake, you would run:
+To disable clpm, you can set `SKIP_INSTALLING_CLPM=true`.  For example, to
+install sbcl 2.0.11 with core compression and threading and exclude clpm, you
+would run:
 
 ```
-SKIP_INSTALLING_LAKE=true \
+SKIP_INSTALLING_CLPM=true \
 SBCL_CONFIGURE_OPTIONS="--with-sb-core-compression --with-sb-thread" \
 asdf install sbcl 2.0.11
 ```
@@ -91,16 +90,17 @@ perks, I recommend installing rlwrap and using clpm to start sbcl.
     ```
     rlwrap clpm exec --context=your-project-name -- sbcl --eval '(asdf:load-system :swank)' --eval '(swank:create-server)'
     ```
-- You can build a standalone binary (lake for this example) using clpm (which
-  installs any required dependencies automatically and compresses the binary
-  without including any unnecessary libraries in your binary) by doing something
-  like this:
+- You can build a standalone binary ([lake](https://github.com/takagi/lake) for
+  this example) using clpm (which installs any required dependencies
+  automatically and compresses the binary without including any unnecessary
+  libraries in your binary) by doing something like this:
     ```
     # From within the lake project...
     clpm exec --context=lake -- sbcl \
         --eval '(setf clpm-client:*asdf-system-not-found-behavior* :install)' \
         --eval '(setf clpm-client:*context-diff-approval-method* t)' \
         --eval '(asdf:load-system :lake)' \
+        --eval '(asdf:clear-system :clpm-client)' \
         --eval "(sb-ext:save-lisp-and-die \"lake\" :toplevel #'lake/main:uiop-main :executable t :compression 9)"
     ```
 - clpm [caches files](https://common-lisp.net/project/clpm/docs/storage.html) in
@@ -108,8 +108,7 @@ perks, I recommend installing rlwrap and using clpm to start sbcl.
   caches with `rm -rf ~/.cache/clpm ~/.local/share/clpm`
 
 ## Possible issues
-The addition of clpm and lake is relatively new.  clpm is configured to use the
-[ql-clpi
+The addition of clpmis relatively new.  clpm is configured to use the [ql-clpi
 source](https://gitlab.common-lisp.net/clpm/clpm/-/blob/master/docs/sources.org),
 which allows access to quicklisp but also allows sourcing GitHub repos
 (including private ones) and allows version specification and pinning, as well
