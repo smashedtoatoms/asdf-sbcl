@@ -87,7 +87,7 @@ function install_sources_conf() {
     local quicklisp_setting='("quicklisp"\n  :type :ql-clpi\n  :url "https://quicklisp.common-lisp-project-index.org/")'
     mkdir -p $HOME/.config/clpm
     echo -e $quicklisp_setting >$path
-    echo "  clpm - Set up clpm source: $path." >/dev/stderr
+    echo "Set up clpm source: $path." >/dev/stderr
 }
 
 function setup_source_registry() {
@@ -95,7 +95,7 @@ function setup_source_registry() {
     mkdir -p $HOME/.config/common-lisp/source-registry.conf.d
     ${ASDF_INSTALL_PATH}/bin/clpm client install
     ${ASDF_INSTALL_PATH}/bin/clpm client source-registry.d >$path
-    echo "  clpm - Set up clpm source registry: $path." >/dev/stderr
+    echo "Set up common lisp source registry: $path." >/dev/stderr
 }
 
 function setup_sbcl_rc() {
@@ -131,7 +131,7 @@ function install_clpm() {
     tar -xvf ${TEMP_DIR}/clpm/clpm-${CLPM_VERSION}.tar.gz -C ${TEMP_DIR}/clpm/
     cd ${TEMP_DIR}/clpm/${CLPM_DIR}
     INSTALL_ROOT=${ASDF_INSTALL_PATH} ./install.sh
-    echo "Installed clpm for $ARCH $(uname -s):" >/dev/stderr
+    echo "Installed CLPM for ${ARCH}64 $(uname -s):" >/dev/stderr
     install_sources_conf
     setup_source_registry
     setup_sbcl_rc
