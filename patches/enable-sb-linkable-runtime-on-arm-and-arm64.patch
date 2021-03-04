@@ -1,0 +1,59 @@
+From 30927e02bee49fc2fd771b24e07dfbf3cace747f Mon Sep 17 00:00:00 2001
+From: Eric Timmons <etimmons@mit.edu>
+Date: Sat, 6 Feb 2021 20:23:16 -0500
+Subject: [PATCH] Enable sb-linkabe-runtime and arm and arm64
+
+---
+ src/cold/shared.lisp           | 2 +-
+ src/runtime/Config.arm-linux   | 5 +++++
+ src/runtime/Config.arm64-linux | 5 +++++
+ 3 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/src/cold/shared.lisp b/src/cold/shared.lisp
+index 8e0714fcf..2ea343b74 100644
+--- a/src/cold/shared.lisp
++++ b/src/cold/shared.lisp
+@@ -320,7 +320,7 @@ (defvar *shebang-backend-subfeatures*
+          ("(not (or elf mach-o win32))"
+           "No execute object file format feature defined")
+          ("(and cons-profiling (not sb-thread))" ":CONS-PROFILING requires :SB-THREAD")
+-         ("(and sb-linkable-runtime (not (or x86 x86-64)))"
++         ("(and sb-linkable-runtime (not (or arm arm64 x86 x86-64)))"
+           ":SB-LINKABLE-RUNTIME not supported on selected architecture")
+          ("(and sb-linkable-runtime (not (or darwin linux win32)))"
+           ":SB-LINKABLE-RUNTIME not supported on selected operating system")
+diff --git a/src/runtime/Config.arm-linux b/src/runtime/Config.arm-linux
+index cc9b62861..7c52ca62f 100644
+--- a/src/runtime/Config.arm-linux
++++ b/src/runtime/Config.arm-linux
+@@ -34,6 +34,11 @@ ifdef LISP_FEATURE_LARGEFILE
+ endif
+ LINKFLAGS += -Wl,--export-dynamic
+ 
++ifdef LISP_FEATURE_SB_LINKABLE_RUNTIME
++  LIBSBCL = sbcl.o
++  USE_LIBSBCL = sbcl.o
++endif
++
+ # Nothing to do for after-grovel-headers.
+ .PHONY: after-grovel-headers
+ after-grovel-headers:
+diff --git a/src/runtime/Config.arm64-linux b/src/runtime/Config.arm64-linux
+index a073f6844..c03f649d6 100644
+--- a/src/runtime/Config.arm64-linux
++++ b/src/runtime/Config.arm64-linux
+@@ -32,6 +32,11 @@ ifdef LISP_FEATURE_LARGEFILE
+ endif
+ LINKFLAGS += -Wl,--export-dynamic
+ 
++ifdef LISP_FEATURE_SB_LINKABLE_RUNTIME
++  LIBSBCL = sbcl.o
++  USE_LIBSBCL = sbcl.o
++endif
++
+ # Nothing to do for after-grovel-headers.
+ .PHONY: after-grovel-headers
+ after-grovel-headers:
+-- 
+2.30.1
+

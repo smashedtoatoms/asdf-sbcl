@@ -4,6 +4,8 @@ if [ "$SBCL_HOME" = "" ]; then
   export SBCL_HOME="$ASDF_INSTALL_PATH/lib/sbcl"
 fi
 
-if [ "$CLPM_CLIENT_PATH" = "" ]; then
-  export CLPM_CLIENT_PATH="$ASDF_INSTALL_PATH/lib/clpm/client/"
+if [[ "$CL_SOURCE_REGISTRY" == \(* ]]; then
+  export CL_SOURCE_REGISTRY="${CL_SOURCE_REGISTRY%)*} (:directory \"$ASDF_INSTALL_PATH/lib/clpm/client/\"))"
+else
+  export CL_SOURCE_REGISTRY="$CL_SOURCE_REGISTRY:$ASDF_INSTALL_PATH/lib/clpm/client/"
 fi
