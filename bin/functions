@@ -105,7 +105,6 @@ function setup_sbcl_rc() {
     ${ASDF_INSTALL_PATH}/bin/clpm client rc >$HOME/.sbclrc
 }
 
-# This isn't handling arm detection correctly in linux.
 function install_clpm() {
     case $(uname -s) in
     Darwin)
@@ -113,14 +112,14 @@ function install_clpm() {
             # Grabbing this from my git repo until it's officially up
             CLPM_URL="https://raw.githubusercontent.com/smashedtoatoms/files/main/clpm-arm64-darwin-v${CLPM_VERSION}.tar.gz"
         else
-            CLPM_URL="https://files.clpm.dev/clpm/clpm-amd64-darwin-v${CLPM_VERSION}.tar.gz"
+            CLPM_URL="https://files.clpm.dev/clpm/clpm-${CLPM_VERSION}-darwin-amd64.tar.gz"
         fi
         ;;
     Linux)
         if [ $ARCH = "arm" ]; then
-            CLPM_URL="https://files.clpm.dev/clpm/clpm-arm64-linux-gnu-v${CLPM_VERSION}.tar.gz"
+            CLPM_URL="https://files.clpm.dev/clpm/clpm-${CLPM_VERSION}-linux-arm64.tar.gz"
         else
-            CLPM_URL="https://files.clpm.dev/clpm/clpm-amd64-linux-gnu-v${CLPM_VERSION}.tar.gz"
+            CLPM_URL="https://files.clpm.dev/clpm/clpm-${CLPM_VERSION}-linux-amd64.tar.gz"
         fi
         ;;
     esac
