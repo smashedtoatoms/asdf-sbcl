@@ -15,10 +15,12 @@ missing, you can fix it in the debugger.  It does all of this without closing
 over your lisp environment in a way that forces a particular workflow.  It
 doesn't crud up your standalone binaries.  It doesn't force the consumers of
 your library to adopt your workflow.  I have included it by default, so you will
-not need to install or configure it.  I HIGHLY recommend reading CLPM's docs to
-get familiar with why it's excellent, and why everyone should be using it.  All
-of that said, if you don't want to install it, you can exclude it by setting
-the SKIP_INSTALLING_CLPM environment to 1 or true.  There are examples below.
+not need to install or configure it.  I suspect I will end up pulling it out
+though since it really should be separate from this installer.  I HIGHLY 
+recommend reading CLPM's docs to get familiar with why it's excellent, and why
+everyone should be using it.  All of that said, if you don't want to install 
+it, you can exclude it by setting the SKIP_INSTALLING_CLPM environment to 1 
+or true.  There are examples below.
 
 ## Requirements
 - [jq](https://stedolan.github.io/jq/)
