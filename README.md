@@ -64,6 +64,11 @@ doesn't crud up your standalone binaries.  It doesn't force the consumers of
 your library to adopt your workflow.  I HIGHLY recommend reading CLPM's docs to
 get familiar with why it's excellent, and why everyone should be using it.
 
+I have written about how to use SBCL with CLPM and VSCode
+[here](https://smashedtoatoms.com/dev-life/sbcl-with-vscode-via-clpm-2021/) and
+why I like it
+[here](https://smashedtoatoms.com/posts/2021-03-05t174019-0700-starting/)
+
 I used to include it by default, but I have since removed it because there isn't
 a good way to include it in this installer that doesn't affect other things.
 If, after installing sbcl, you decide that you want to install CLPM, do this:
