@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-DEFAULT_CLPM_VERSION="0.4.0-alpha.1" # This must be >= 0.4.0-alpha.1 to correctly handle the *central-registry*
 CACHE_DIR="/tmp/asdf-sbcl.cache"
 SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
@@ -82,70 +81,6 @@ function construct_configure_options() {
     echo "$configure_options"
 }
 
-function install_sources_conf() {
-    local path=$HOME/.config/clpm/sources.conf
-    local quicklisp_setting='("quicklisp"\n  :type :ql-clpi\n  :url "https://quicklisp.common-lisp-project-index.org/")'
-    mkdir -p $HOME/.config/clpm
-    echo -e $quicklisp_setting >$path
-    echo "Set up clpm source: $path." >/dev/stderr
-}
-
-function setup_source_registry() {
-    local path=$HOME/.config/common-lisp/source-registry.conf.d/20-clpm-client.conf
-    mkdir -p $HOME/.config/common-lisp/source-registry.conf.d
-    ${ASDF_INSTALL_PATH}/bin/clpm client install
-    ${ASDF_INSTALL_PATH}/bin/clpm client source-registry.d >$path
-    echo "Set up common lisp source registry: $path." >/dev/stderr
-}
-
-function setup_sbcl_rc() {
-    if [ -f "$HOME/.sbclrc" ]; then
-        cp $HOME/.sbclrc $HOME/.sbclrc.$(date +"%Y%m%d_%H%M%S").bak
-    fi
-    ${ASDF_INSTALL_PATH}/bin/clpm client rc >$HOME/.sbclrc
-}
-
-function install_clpm() {
-    case $(uname -s) in
-    Darwin)
-        if [ $ARCH = "arm" ]; then
-            # Grabbing this from my git repo until it's officially up
-            CLPM_URL="https://raw.githubusercontent.com/smashedtoatoms/files/main/clpm-${CLPM_VERSION}-darwin-arm64.tar.gz"
-            CLPM_DIR="clpm-${CLPM_VERSION}-darwin-arm64"
-        else
-            CLPM_URL="https://files.clpm.dev/clpm/clpm-${CLPM_VERSION}-darwin-amd64.tar.gz"
-            CLPM_DIR="clpm-${CLPM_VERSION}-darwin-amd64"
-        fi
-        ;;
-    Linux)
-        if [ $ARCH = "arm" ]; then
-            CLPM_URL="https://files.clpm.dev/clpm/clpm-${CLPM_VERSION}-linux-arm64.tar.gz"
-            CLPM_DIR="clpm-${CLPM_VERSION}-linux-arm64"
-        else
-            CLPM_URL="https://files.clpm.dev/clpm/clpm-${CLPM_VERSION}-linux-amd64.tar.gz"
-            CLPM_DIR="clpm-${CLPM_VERSION}-linux-amd64"
-        fi
-        ;;
-    esac
-    mkdir -p ${TEMP_DIR}/clpm && curl -Lo ${TEMP_DIR}/clpm/clpm-${CLPM_VERSION}.tar.gz -C - ${CLPM_URL}
-    tar -xvf ${TEMP_DIR}/clpm/clpm-${CLPM_VERSION}.tar.gz -C ${TEMP_DIR}/clpm/
-    cd ${TEMP_DIR}/clpm/${CLPM_DIR}
-    INSTALL_ROOT=${ASDF_INSTALL_PATH} ./install.sh
-    echo "Installed CLPM for ${ARCH}64 $(uname -s):" >/dev/stderr
-    install_sources_conf
-    setup_source_registry
-    setup_sbcl_rc
-}
-
-function install_extras() {
-    if [ "$SKIP_INSTALLING_CLPM" = "" ]; then
-        if [ "$CLPM_VERSION" = "" ]; then
-            CLPM_VERSION=$DEFAULT_CLPM_VERSION
-        fi
-        install_clpm
-    fi
-}
-
 function install() {
     local configure_options="$(construct_configure_options)"
 
@@ -172,12 +107,7 @@ function install() {
         INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh
     echo "Installed SBCL" >/dev/stderr
 
-    install_extras
-    if [ "$SKIP_INSTALLING_CLPM" = "" ]; then
-      ${ASDF_INSTALL_PATH}/bin/clpm exec -- ${ASDF_INSTALL_PATH}/bin/sbcl --version
-    else
-      ${ASDF_INSTALL_PATH}/bin/sbcl --version
-    fi
+    ${ASDF_INSTALL_PATH}/bin/sbcl --version
 }
 
 case $(basename ${0}) in

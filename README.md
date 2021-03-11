@@ -8,34 +8,20 @@ this can take some time.  In return, it will give you the flexibility to run and
 manage different versions of SBCL, which will liberate you from the often
 outdated official packages.
 
-I have found [CLPM](https://www.clpm.dev/) to be incredibly useful.  It gives
-you version pinning.  You can use git repos as sources.  You can pin quicklisp
-dependencies.  It hooks into ASDF elegantly so that when a dependency is
-missing, you can fix it in the debugger.  It does all of this without closing
-over your lisp environment in a way that forces a particular workflow.  It
-doesn't crud up your standalone binaries.  It doesn't force the consumers of
-your library to adopt your workflow.  I have included it by default, so you will
-not need to install or configure it.  I suspect I will end up pulling it out
-though since it really should be separate from this installer.  I HIGHLY 
-recommend reading CLPM's docs to get familiar with why it's excellent, and why
-everyone should be using it.  All of that said, if you don't want to install 
-it, you can exclude it by setting the SKIP_INSTALLING_CLPM environment to 1 
-or true.  There are examples below.
-
-## Requirements
+### Requirements
 - [jq](https://stedolan.github.io/jq/)
 - [curl](https://curl.haxx.se/)
 
-## Recommended
+### Recommended
 - [rlwrap](https://github.com/hanslub42/rlwrap)
 
-## Install Plugin
+### Install Plugin
 
 ```
 asdf plugin-add sbcl https://github.com/smashedtoatoms/asdf-sbcl.git
 ```
 
-## Asdf-vm Usage
+### Asdf-vm Usage
 
 List candidate SBCLs:
 
@@ -55,7 +41,7 @@ Select an installed candidate for use like this:
 asdf global sbcl 2.1.2
 ```
 
-## Custom compile flags
+### Custom compile flags
 
 The default install will use `--with-sb-core-compression --with-sb-thread
 --with-sb-linkable-runtime` so that you can create freestanding images for
@@ -64,25 +50,50 @@ you can set them by using the following syntax on install:
 
 ```
 SBCL_CONFIGURE_OPTIONS="--with-sb-core-compression --with-sb-thread" \
-asdf install sbcl 2.0.10
-```
-
-## Disable CLPM
-
-To disable CLPM, you can set `SKIP_INSTALLING_CLPM=true`.  For example, to
-install sbcl 2.1.2 with core compression and threading and exclude CLPM, you
-would run:
-
-```
-SKIP_INSTALLING_CLPM=true \
-SBCL_CONFIGURE_OPTIONS="--with-sb-core-compression --with-sb-thread" \
 asdf install sbcl 2.1.2
 ```
 
-## SBCL Tricks
+## CLPM
+
+I have found [CLPM](https://www.clpm.dev/) to be incredibly useful.  It gives
+you version pinning.  You can use git repos as sources.  You can pin quicklisp
+dependencies.  It hooks into ASDF elegantly so that when a dependency is
+missing, you can fix it in the debugger.  It does all of this without closing
+over your lisp environment in a way that forces a particular workflow.  It
+doesn't crud up your standalone binaries.  It doesn't force the consumers of
+your library to adopt your workflow.  I HIGHLY recommend reading CLPM's docs to
+get familiar with why it's excellent, and why everyone should be using it.
+
+I used to include it by default, but I have since removed it because there isn't
+a good way to include it in this installer that doesn't affect other things.
+If, after installing sbcl, you decide that you want to install CLPM, do this:
+
+1. [Install the clpm binary](https://www.clpm.dev/#installing)
+   - Note: there isn't a clpm binary for the M1 Mac yet.  If you need one now,
+     you can either build it yourself from the source, or use [this one that I
+     built](https://raw.githubusercontent.com/smashedtoatoms/files/main/clpm-0.4.0-alpha.1-darwin-arm64.tar.gz)
+     if you trust me.
+2. Configure CLPM
+   - If you're comfortable running scripts off of the internet, you can run
+      this:
+      ```sh
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/smashedtoatoms/files/main/configure-clpm-to-work-with-sbcl.sh)"
+      ```
+   - If you want to do it manually, [follow these
+      instructions](https://www.clpm.dev/#installing)
+
+If you decide you want to remove the clpm config and clear the cached data, you can do this:
+```sh
+wget https://raw.githubusercontent.com/smashedtoatoms/files/main/configure-clpm-to-work-with-sbcl.sh
+chmod 755 configure-clpm-to-work-with-sbcl.sh
+./configure-clpm-to-work-with-sbcl.sh cleanup
+```
+
+### CLPM Tricks
 
 Sbcl will work like normal following installation; however, If you want all the
-perks, I recommend installing rlwrap and using CLPM to start sbcl.
+perks, I recommend installing rlwrap and CPLM, and use CLPM to start sbcl.  Once
+you have all of those in place, you can do stuff like this:
 
 - You can start a swank repl on port 4005 which you can then hook an editor to
   (I use vscode with
@@ -117,7 +128,7 @@ perks, I recommend installing rlwrap and using CLPM to start sbcl.
   - ~/.local/share/clpm
   - ~/.sbclrc
 
-## Possible CLPM issues
+### Possible CLPM issues
 CLPM dynamically links to OpenSSL.  OpenSSL on Macs is a dumpster fire.  It
 currently checks
 [the following paths](https://github.com/cl-plus-ssl/cl-plus-ssl/blob/5aed9cabc2a6394d9e35e377f154d8c882b865eb/src/reload.lisp#L44).
