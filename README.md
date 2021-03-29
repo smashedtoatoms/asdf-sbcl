@@ -44,9 +44,10 @@ asdf global sbcl 2.1.2
 ### Custom compile flags
 
 The default install will use `--with-sb-core-compression --with-sb-thread
---with-sb-linkable-runtime` so that you can create freestanding images for
-distribution that use multiple cores. If you want different compile-time flags,
-you can set them by using the following syntax on install:
+--with-sb-linkable-runtime --with-sb-rotate-byte` so that you can create
+freestanding images for distribution that use multiple cores and use crypto. If
+you want different compile-time flags you can set them by using the following
+syntax on install:
 
 ```
 SBCL_CONFIGURE_OPTIONS="--with-sb-core-compression --with-sb-thread" \
@@ -76,20 +77,20 @@ If, after installing sbcl, you decide that you want to install CLPM, do this:
 1. [Install the clpm binary](https://www.clpm.dev/#installing)
    - Note: there isn't a clpm binary for the M1 Mac yet.  If you need one now,
      you can either build it yourself from the source, or use [this one that I
-     built](https://raw.githubusercontent.com/smashedtoatoms/files/main/clpm-0.4.0-alpha.1-darwin-arm64.tar.gz)
+     built](https://smashedtoatoms.com/rando/clpm-0.4.0-alpha.1-darwin-arm64.tar.gz)
      if you trust me.
 2. Configure CLPM
    - If you're comfortable running scripts off of the internet, you can run
       this:
       ```sh
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/smashedtoatoms/files/main/configure-clpm-to-work-with-sbcl.sh)"
+      /bin/bash -c "$(curl -fsSL https://smashedtoatoms.com/rando/configure-clpm-to-work-with-sbcl.sh)"
       ```
    - If you want to do it manually, [follow these
       instructions](https://www.clpm.dev/#installing)
 
 If you decide you want to remove the clpm config and clear the cached data, you can do this:
 ```sh
-wget https://raw.githubusercontent.com/smashedtoatoms/files/main/configure-clpm-to-work-with-sbcl.sh
+wget https://smashedtoatoms.com/rando/configure-clpm-to-work-with-sbcl.sh
 chmod 755 configure-clpm-to-work-with-sbcl.sh
 ./configure-clpm-to-work-with-sbcl.sh cleanup
 ```
