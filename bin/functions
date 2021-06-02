@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 CACHE_DIR="/tmp/asdf-sbcl.cache"
-SCRIPT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+SCRIPT_PATH="$(
+    cd -- "$(dirname "$0")" >/dev/null 2>&1
+    pwd -P
+)"
 
 mkdir -p ${CACHE_DIR}
 
@@ -99,13 +102,25 @@ function install() {
 
     if [ "${ASDF_INSTALL_VERSION}" = "2.1.2" ]; then
         echo "################# Patching SBCL #################" >/dev/stderr
-        git am < "$SCRIPT_PATH/../patches/enable-sb-linkable-runtime-on-arm-and-arm64.patch"
+        git am <"$SCRIPT_PATH/../patches/enable-sb-linkable-runtime-on-arm-and-arm64.patch"
         echo "################# Patched SBCL  #################" >/dev/stderr
     fi
 
     if [ "${ASDF_INSTALL_VERSION}" = "2.1.3" ]; then
         echo "################# Patching SBCL #################" >/dev/stderr
-        git am < "$SCRIPT_PATH/../patches/enable-sb-linkable-runtime-on-arm-and-arm64.patch"
+        git am <"$SCRIPT_PATH/../patches/enable-sb-linkable-runtime-on-arm-and-arm64.patch"
+        echo "################# Patched SBCL  #################" >/dev/stderr
+    fi
+
+    if [ "${ASDF_INSTALL_VERSION}" = "2.1.4" ]; then
+        echo "################# Patching SBCL #################" >/dev/stderr
+        git am <"$SCRIPT_PATH/../patches/enable-sb-linkable-runtime-on-arm-and-arm64.patch"
+        echo "################# Patched SBCL  #################" >/dev/stderr
+    fi
+
+    if [ "${ASDF_INSTALL_VERSION}" = "2.1.5" ]; then
+        echo "################# Patching SBCL #################" >/dev/stderr
+        git am <"$SCRIPT_PATH/../patches/enable-sb-linkable-runtime-on-arm-and-arm64.patch"
         echo "################# Patched SBCL  #################" >/dev/stderr
     fi
 
