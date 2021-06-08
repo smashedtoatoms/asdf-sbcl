@@ -7,7 +7,7 @@ on:
     paths-ignore:
       - "**.md"
   schedule:
-    - cron: "15 0 * * 1" # every Monday at 9am MST
+    - cron: "15 0 * * 1"
 
 jobs:
   plugin_test:
