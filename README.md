@@ -78,7 +78,18 @@ If, after installing sbcl, you decide that you want to install CLPM, do this:
    - Note: there isn't a clpm binary for the M1 Mac yet.  If you need one now,
      you can either build it yourself from the source, or use [this one that I
      built](https://smashedtoatoms.com/rando/clpm-0.4.0-alpha.1-darwin-arm64.tar.gz)
-     if you trust me.
+     if you trust me.  If you choose to run this and get errors about clpm not being
+     able to find openssl libraries that looks like either of these:
+     ```sh
+     Error opening shared object "/opt/local/lib/libcrypto.dylib"
+     Error opening shared object "/opt/local/lib/libssl.dylib"
+     ```
+     you may need to add links to openssl in places where it is looking.  This is 
+     a problem with sbcl/clpm that has been fixed but hasn't been mainlined yet.  
+     ```sh
+     sudo ln -s /opt/homebrew/opt/openssl/lib/libcrypto.dylib /opt/local/lib/
+     sudo ln -s /opt/homebrew/opt/openssl/lib/libssl.dylib /opt/local/lib/
+     ```
 2. Configure CLPM
    - If you're comfortable running scripts off of the internet, you can run
       this:
