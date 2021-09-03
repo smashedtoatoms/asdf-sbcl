@@ -157,7 +157,7 @@ curl -L https://smashedtoatoms.com/rando/configure-clpm-to-work-with-sbcl.sh | b
 
 ### Possible CLPM issues
 CLPM dynamically links to OpenSSL.  OpenSSL on Macs is a dumpster fire.
-With SBCL versions between 2.1.2 and 2.1.8 it will most certainly have
+With SBCL versions between 2.1.2 and 2.1.7 it will most certainly have
 problems (no M1 support pre 2.1.2 and it was fixed in 2.1.8).  Those
 versions check [the following
 paths](https://github.com/cl-plus-ssl/cl-plus-ssl/blob/5aed9cabc2a6394d9e35e377f154d8c882b865eb/src/reload.lisp#L44).
