@@ -129,7 +129,7 @@ curl -L https://smashedtoatoms.com/rando/configure-clpm-to-work-with-sbcl.sh | b
     rlwrap clpm exec --context=your-project-name -- sbcl \
         --eval '(setf clpm-client:*asdf-system-not-found-behavior* :install)' \
         --eval '(setf clpm-client:*context-diff-approval-method* t)' \
-        --eval '(asdf:load-system :swank)'
+        --eval '(asdf:load-system :swank)' \
         --eval '(swank:create-server)'
     ```
 - You can build a standalone binary ([lake](https://github.com/takagi/lake) for
