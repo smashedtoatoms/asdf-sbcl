@@ -101,7 +101,7 @@ you want to install CLPM, do this:
      Error opening shared object "/opt/local/lib/libssl.dylib"
      ```
      you may need to add links to openssl in places where it is looking.  This is
-     a problem with sbcl/clpm that has been fixed but hasn't been mainlined yet.
+     a problem with sbcl/clpm that was fixed in 2.1.8.
      ```sh
      sudo ln -s /opt/homebrew/opt/openssl/lib/libcrypto.dylib /opt/local/lib/
      sudo ln -s /opt/homebrew/opt/openssl/lib/libssl.dylib /opt/local/lib/
