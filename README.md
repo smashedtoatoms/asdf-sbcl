@@ -3,10 +3,25 @@
 Steel Bank Common Lisp plugin for [asdf-vm](https://github.com/asdf-vm/asdf)
 version manager.
 
-This plugin installs SBCL from source. Depending on the speed of your system,
-this can take some time.  In return, it will give you the flexibility to run and
-manage different versions of SBCL, which will liberate you from the often
-outdated official packages.
+This plugin installs SBCL from source. Depending on the speed of your
+system, this can take some time.  In return, it will give you the
+flexibility to run and manage different versions of SBCL with
+configurable build options. This will liberate you from the tyranny of
+outdated official packages or missing compile-time flags that you might
+need.
+
+It chooses a few useful options by default to make it easier to generate
+compressed images of multithreaded apps that make use of external
+libraries and crypto (mostly so you can generate small binaries that use
+openssl out of the box):
+  - `--with-sb-core-compression` for creating compressable images
+  - `--with-sb-thread` for threading
+  - `--with-sb-linkable-runtime` for linking outside libs like openssl
+  - `--with-sb-rotate-byte` for cryptography and hashing
+
+All versions > 2.1.2 have a patch applied to allow the linking of
+external libs on M1 macs.  I will continue to keep adding this patch
+until it makes it into mainline sbcl.
 
 ### Requirements
 - [jq](https://stedolan.github.io/jq/)
@@ -32,26 +47,25 @@ asdf list-all sbcl
 Install a candidate listed from the previous command like this:
 
 ```
-asdf install sbcl 2.1.5
+asdf install sbcl 2.1.8
 ```
 
 Select an installed candidate for use like this:
 
 ```
-asdf global sbcl 2.1.5
+asdf global sbcl 2.1.8
 ```
 
 ### Custom compile flags
 
-The default install will use `--with-sb-core-compression --with-sb-thread
---with-sb-linkable-runtime --with-sb-rotate-byte` so that you can create
-freestanding images for distribution that use multiple cores and use crypto. If
-you want different compile-time flags you can set them by using the following
-syntax on install:
+The default install will use `--with-sb-core-compression
+--with-sb-thread --with-sb-linkable-runtime --with-sb-rotate-byte`.  If
+you want different compile-time flags, you can set them by using the
+following syntax on install:
 
 ```
 SBCL_CONFIGURE_OPTIONS="--with-sb-core-compression --with-sb-thread" \
-asdf install sbcl 2.1.5
+asdf install sbcl 2.1.8
 ```
 
 ## CLPM
@@ -63,54 +77,50 @@ missing, you can fix it in the debugger.  It does all of this without closing
 over your lisp environment in a way that forces a particular workflow.  It
 doesn't crud up your standalone binaries.  It doesn't force the consumers of
 your library to adopt your workflow.  I HIGHLY recommend reading CLPM's docs to
-get familiar with why it's excellent, and why everyone should be using it.
+get familiar with why it's excellent and why everyone should be using it.
 
 I have written about how to use SBCL with CLPM and VSCode
 [here](https://smashedtoatoms.com/dev-life/sbcl-with-vscode-via-clpm-2021/) and
 why I like it
 [here](https://smashedtoatoms.com/posts/2021-03-05t174019-0700-starting/)
 
-I used to include it by default, but I have since removed it because there isn't
-a good way to include it in this installer that doesn't affect other things.
-If, after installing sbcl, you decide that you want to install CLPM, do this:
+I used to include it by default, but I have since removed it because
+there isn't a good way to include it in this installer without
+hard-to-manage side effects. If, after installing sbcl, you decide that
+you want to install CLPM, do this:
 
 1. [Install the clpm binary](https://www.clpm.dev/#installing)
-   - Note: there isn't a clpm binary for the M1 Mac yet.  If you need one now,
-     you can either build it yourself from the source, or use [this one that I
-     built](https://smashedtoatoms.com/rando/clpm-0.4.0-alpha.1-darwin-arm64.tar.gz)
-     if you trust me.  If you choose to run this and get errors about clpm not being
-     able to find openssl libraries that looks like either of these:
+   - Note: there isn't a clpm binary for the M1 Mac yet.  If you need
+     one now, you can either build it yourself from the source, or use
+     [this
+     one](https://smashedtoatoms.com/rando/clpm-0.4.0-0.6.0.mac-m1-and-ci.11-g89b2ff6-darwin-arm64.zip).
+     If you choose to run this and get errors about clpm not being able
+     to find openssl libraries that looks like either of these:
      ```sh
      Error opening shared object "/opt/local/lib/libcrypto.dylib"
      Error opening shared object "/opt/local/lib/libssl.dylib"
      ```
-     you may need to add links to openssl in places where it is looking.  This is 
-     a problem with sbcl/clpm that has been fixed but hasn't been mainlined yet.  
+     you may need to add links to openssl in places where it is looking.  This is
+     a problem with sbcl/clpm that has been fixed but hasn't been mainlined yet.
      ```sh
      sudo ln -s /opt/homebrew/opt/openssl/lib/libcrypto.dylib /opt/local/lib/
      sudo ln -s /opt/homebrew/opt/openssl/lib/libssl.dylib /opt/local/lib/
      ```
-2. Configure CLPM
+1. Configure CLPM
    - If you're comfortable running scripts off of the internet, you can run
       this:
       ```sh
-      /bin/bash -c "$(curl -fsSL https://smashedtoatoms.com/rando/configure-clpm-to-work-with-sbcl.sh)"
+      curl -L https://smashedtoatoms.com/rando/configure-clpm-to-work-with-sbcl.sh | bash
       ```
    - If you want to do it manually, [follow these
       instructions](https://www.clpm.dev/#installing)
 
 If you decide you want to remove the clpm config and clear the cached data, you can do this:
 ```sh
-wget https://smashedtoatoms.com/rando/configure-clpm-to-work-with-sbcl.sh
-chmod 755 configure-clpm-to-work-with-sbcl.sh
-./configure-clpm-to-work-with-sbcl.sh cleanup
+curl -L https://smashedtoatoms.com/rando/configure-clpm-to-work-with-sbcl.sh | bash -s -- cleanup
 ```
 
 ### CLPM Tricks
-
-Sbcl will work like normal following installation; however, If you want all the
-perks, I recommend installing rlwrap and CPLM, and use CLPM to start sbcl.  Once
-you have all of those in place, you can do stuff like this:
 
 - You can start a swank repl on port 4005 which you can then hook an editor to
   (I use vscode with
@@ -146,10 +156,13 @@ you have all of those in place, you can do stuff like this:
   - ~/.sbclrc
 
 ### Possible CLPM issues
-CLPM dynamically links to OpenSSL.  OpenSSL on Macs is a dumpster fire.  It
-currently checks
-[the following paths](https://github.com/cl-plus-ssl/cl-plus-ssl/blob/5aed9cabc2a6394d9e35e377f154d8c882b865eb/src/reload.lisp#L44).
-If it can't find your openssl lib, it will throw an error that looks like this:
+CLPM dynamically links to OpenSSL.  OpenSSL on Macs is a dumpster fire.
+With SBCL versions between 2.1.2 and 2.1.8 it will most certainly have
+problems (no M1 support pre 2.1.2 and it was fixed in 2.1.8).  Those
+versions check [the following
+paths](https://github.com/cl-plus-ssl/cl-plus-ssl/blob/5aed9cabc2a6394d9e35e377f154d8c882b865eb/src/reload.lisp#L44).
+If it can't find your openssl lib, it will throw an error that looks
+like this:
 ```sh
 Unhandled SIMPLE-ERROR in thread #<SB-THREAD:THREAD "main thread" RUNNING
                                     {7008F30243}>:
@@ -176,15 +189,15 @@ Backtrace for: #<SB-THREAD:THREAD "main thread" RUNNING {7008F30243}>
 
 unhandled condition in --disable-debugger mode, quitting
 ```
-If you encounter this, you need to get your libcrypto.dylib into one of [the
-paths
+If you encounter this, you need to get your libcrypto.dylib and
+libssl.dylib into one of [the paths
 specified](https://github.com/cl-plus-ssl/cl-plus-ssl/blob/5aed9cabc2a6394d9e35e377f154d8c882b865eb/src/reload.lisp#L44).
-If you're using [MacPorts](https://www.macports.org), you likely won't have an
-issue.  If you're using [Homebrew](https://brew.sh) on arm64, you're probably
-going to need to symlink to the macports path or something until the explicit
-pathing set
-[here](https://github.com/cl-plus-ssl/cl-plus-ssl/blob/5aed9cabc2a6394d9e35e377f154d8c882b865eb/src/reload.lisp#L44)
-is updated.  For example, I did this as a workaround:
+If you're using [MacPorts](https://www.macports.org), you likely won't
+have an issue.  If you're using [Homebrew](https://brew.sh), you're
+probably going to need to symlink to /opt/local/lib.  For example, I did
+this as a workaround:
 ```sh
-sudo mkdir -p /opt/local && sudo ln -s /opt/homebrew/opt/openssl/lib /opt/local/lib
+sudo mkdir -p /opt/local
+sudo ln -s /opt/homebrew/opt/openssl/lib/libcrypto.dylib /opt/local/lib/
+sudo ln -s /opt/homebrew/opt/openssl/lib/libssl.dylib /opt/local/lib/
 ```
