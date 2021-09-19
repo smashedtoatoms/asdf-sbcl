@@ -107,7 +107,7 @@ curl -L https://smashedtoatoms.com/rando/configure-clpm-to-work-with-sbcl.sh | b
   (I use vscode with
   [Alive](https://marketplace.visualstudio.com/items?itemName=rheller.alive)):
     ```
-    rlwrap clpm exec --context=your-project-name -- sbcl \
+    clpm exec --context=your-project-name -- sbcl \
         --eval '(setf clpm-client:*asdf-system-not-found-behavior* :install)' \
         --eval '(setf clpm-client:*context-diff-approval-method* t)' \
         --eval '(asdf:load-system :swank)' \
