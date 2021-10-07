@@ -44,13 +44,13 @@ asdf list-all sbcl
 Install a candidate listed from the previous command like this:
 
 ```
-asdf install sbcl 2.1.8
+asdf install sbcl 2.1.9
 ```
 
 Select an installed candidate for use like this:
 
 ```
-asdf global sbcl 2.1.8
+asdf global sbcl 2.1.9
 ```
 
 ### Custom compile flags
@@ -62,7 +62,7 @@ following syntax on install:
 
 ```
 SBCL_CONFIGURE_OPTIONS="--with-sb-core-compression --with-sb-thread" \
-asdf install sbcl 2.1.8
+asdf install sbcl 2.1.9
 ```
 
 ## CLPM
