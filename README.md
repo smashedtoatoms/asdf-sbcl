@@ -19,9 +19,9 @@ openssl out of the box):
   - `--with-sb-linkable-runtime` for linking outside libs like openssl
   - `--with-sb-rotate-byte` for cryptography and hashing
 
-All versions > 2.1.2 have a patch applied to allow the linking of
-external libs on M1 macs.  I will continue to keep adding this patch
-until it makes it into mainline sbcl.
+All versions from 2.1.2 to 2.1.11 have a patch applied to allow the
+linking of external libs on M1 macs.  To the best of my knowledge, 2.2.0
+on no longer require the patch.
 
 ### Requirements
 - [jq](https://stedolan.github.io/jq/)
@@ -44,13 +44,13 @@ asdf list-all sbcl
 Install a candidate listed from the previous command like this:
 
 ```
-asdf install sbcl 2.1.10
+asdf install sbcl 2.2.0
 ```
 
 Select an installed candidate for use like this:
 
 ```
-asdf global sbcl 2.1.10
+asdf global sbcl 2.2.0
 ```
 
 ### Custom compile flags
@@ -62,7 +62,7 @@ following syntax on install:
 
 ```
 SBCL_CONFIGURE_OPTIONS="--with-sb-core-compression --with-sb-thread" \
-asdf install sbcl 2.1.10
+asdf install sbcl 2.2.0
 ```
 
 ## CLPM

@@ -154,6 +154,12 @@ function install() {
         echo "#### Applied Linkable Runtime Patch to SBCL  ####" >/dev/stderr
     fi
 
+    if [ "${ASDF_INSTALL_VERSION}" = "2.1.11" ]; then
+        echo "#### Applying Linkable Runtime Patch to SBCL ####" >/dev/stderr
+        git am <"$SCRIPT_PATH/../patches/enable-sb-linkable-runtime-on-arm-and-arm64.patch"
+        echo "#### Applied Linkable Runtime Patch to SBCL  ####" >/dev/stderr
+    fi
+
     PATH=${CACHE_DIR}/bootstrap/bin:${PATH} INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${CACHE_DIR}/bootstrap/lib/sbcl sh make.sh ${configure_options} &&
         INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh
     echo "Installed SBCL" >/dev/stderr
