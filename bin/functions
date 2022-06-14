@@ -8,22 +8,36 @@ SCRIPT_PATH="$(
 
 mkdir -p ${CACHE_DIR}
 
+function get_arch () {
+    local arch=""
+    local arch_check="$(uname -m)"
+    case "${arch_check}" in
+        x86_64|amd64) arch="x86-64"; ;;
+        i686|i386|386) arch="x86"; ;;
+        aarch64|arm64) arch="arm64"; ;;
+        ppc64le) arch="powerpc"; ;;
+    esac
+
+    printf "%s" "$arch"
+}
+
+OS="$(uname | tr '[:upper:]' '[:lower:]')"
+ARCH="$(get_arch)"
+
 case $(uname -s) in
 Darwin)
-    BOOTSTRAP_COMPILER="https://github.com/emotiq/sbcl-binaries/releases/download/1.4.8/sbcl-1.4.8-x86-64-darwin-binary.tar.bz2"
-    OS="darwin"
-    ARCH="$(uname -p)"
     STAT="stat -f %c ${CACHE_DIR}/*"
     TEMP_DIR=$(mktemp -dt asdf-sbcl)
+    VERSION="2.1.2"
     ;;
 Linux)
-    BOOTSTRAP_COMPILER="https://github.com/emotiq/sbcl-binaries/releases/download/1.4.8/sbcl-1.4.8-x86-64-linux-binary.tar.bz2"
-    OS="linux"
-    ARCH="$(uname -p)"
     STAT="stat -c %Z ${CACHE_DIR}/*"
     TEMP_DIR=$(mktemp -dp /tmp asdf-sbcl.XXXXXXXX)
+    VERSION="1.4.2"
     ;;
 esac
+
+BOOTSTRAP_COMPILER="http://prdownloads.sourceforge.net/sbcl/sbcl-${VERSION}-${ARCH}-${OS}-binary.tar.bz2"
 
 case ${GITHUB_PAT} in
 "") CURL_AUTH="" ;;
