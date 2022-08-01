@@ -10,14 +10,26 @@ on:
     - cron: "15 0 * * 1"
 
 jobs:
-  plugin_test:
-    name: asdf plugin test
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+  linux:
+    runs-on: ubuntu-latest
     steps:
-      - name: asdf_plugin_test
+      - name: install dependencies
+        run: sudo apt-get install libzstd-dev
+      - name: asdf plugin test
         uses: asdf-vm/actions/plugin-test@v1
         with:
-          command: sbcl --version
+          asdf_branch: main
+          command: sbcl -version
+  mac:
+    runs-on: macos-latest
+    env:
+      CPATH: /usr/local/include:$CPATH
+      LIBRARY_PATH: /usr/local/lib:$LIBRARY_PATH
+    steps:
+      - name: install dependencies
+        run: brew install zstd
+      - name: asdf plugin test
+        uses: asdf-vm/actions/plugin-test@v1
+        with:
+          command: sbcl -version
+          asdf_branch: main
