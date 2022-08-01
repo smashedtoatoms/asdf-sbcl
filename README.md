@@ -38,7 +38,7 @@ they normally install.
 
 - [jq](https://stedolan.github.io/jq/)
 - [curl](https://curl.haxx.se/)
-- [zstd]()
+- [zstd](https://github.com/facebook/zstd)
 
 ### Install Plugin
 

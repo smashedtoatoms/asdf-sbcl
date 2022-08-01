@@ -18,8 +18,7 @@ jobs:
       - name: asdf plugin test
         uses: asdf-vm/actions/plugin-test@v1
         with:
-          asdf_branch: main
-          command: sbcl -version
+          command: sbcl --version
   mac:
     runs-on: macos-latest
     env:
@@ -31,5 +30,4 @@ jobs:
       - name: asdf plugin test
         uses: asdf-vm/actions/plugin-test@v1
         with:
-          command: sbcl -version
-          asdf_branch: main
+          command: sbcl --version
