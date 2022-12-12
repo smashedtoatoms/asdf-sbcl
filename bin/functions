@@ -35,14 +35,14 @@ Darwin)
     x86-64)
         STAT="stat -f %c ${CACHE_DIR}/*"
         TEMP_DIR=$(mktemp -dt asdf-sbcl)
-        VERSION="1.2.11"
+        VERSION="2.2.11"
         ;;
     esac
     ;;
 *)
     STAT="stat -c %Z ${CACHE_DIR}/*"
     TEMP_DIR=$(mktemp -dp /tmp asdf-sbcl.XXXXXXXX)
-    VERSION="1.4.2"
+    VERSION="1.4.3"
     ;;
 esac
 
