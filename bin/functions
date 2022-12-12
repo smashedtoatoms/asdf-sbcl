@@ -39,6 +39,20 @@ Darwin)
         ;;
     esac
     ;;
+Linux)
+    case $(get_arch) in
+    arm64)
+        STAT="stat -c %Z ${CACHE_DIR}/*"
+        TEMP_DIR=$(mktemp -dp /tmp asdf-sbcl.XXXXXXXX)
+        VERSION="1.4.2"
+        ;;
+    x86-64)
+        STAT="stat -c %Z ${CACHE_DIR}/*"
+        TEMP_DIR=$(mktemp -dp /tmp asdf-sbcl.XXXXXXXX)
+        VERSION="2.2.11"
+        ;;
+    esac
+    ;;
 *)
     STAT="stat -c %Z ${CACHE_DIR}/*"
     TEMP_DIR=$(mktemp -dp /tmp asdf-sbcl.XXXXXXXX)
