@@ -35,7 +35,7 @@ Darwin)
     x86-64)
         STAT="stat -f %c ${CACHE_DIR}/*"
         TEMP_DIR=$(mktemp -dt asdf-sbcl)
-        VERSION="2.2.11"
+        VERSION="2.2.9"
         ;;
     esac
     ;;
