@@ -49,7 +49,7 @@ they normally install.
 
 - [jq](https://stedolan.github.io/jq/)
 - [curl](https://curl.haxx.se/)
-- [zstd](https://github.com/facebook/zstd)
+- [libzstd-dev](https://github.com/facebook/zstd)
 - [ecl](https://ecl.common-lisp.dev) on macs
 
 ### Install Plugin
