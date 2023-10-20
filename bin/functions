@@ -126,7 +126,9 @@ function install() {
 
     SHA_QUERY=".[] | select(.name == \"${ASDF_INSTALL_VERSION}\") | .commit.sha"
     SHA=$(jq -r "${SHA_QUERY}" ${CACHE_DIR}/asdf-sbcl.json)
-    install-bootstrap
+    if [[ $(uname -s) != "Darwin" ]]; then
+        install-bootstrap
+    fi
 
     if [[ ! -d "${CACHE_DIR}/sbcl/.git" ]]; then
         git -C ${CACHE_DIR} clone https://github.com/sbcl/sbcl.git
@@ -197,8 +199,13 @@ function install() {
         echo "#### Applied Linkable Runtime Patch to SBCL  ####" >/dev/stderr
     fi
 
-    PATH=${CACHE_DIR}/bootstrap/bin:${PATH} INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${CACHE_DIR}/bootstrap/lib/sbcl sh make.sh ${configure_options} &&
-        INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh
+    if [[ $(uname -s) == "Darwin" ]]; then
+        PATH=${CACHE_DIR}/bootstrap/bin:${PATH} INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${CACHE_DIR}/bootstrap/lib/sbcl sh make.sh --xc-host="ecl --norc" ${configure_options} &&
+            INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh
+    else
+        PATH=${CACHE_DIR}/bootstrap/bin:${PATH} INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${CACHE_DIR}/bootstrap/lib/sbcl sh make.sh ${configure_options} &&
+            INSTALL_ROOT=${ASDF_INSTALL_PATH} SBCL_HOME=${ASDF_INSTALL_PATH}/lib/sbcl sh install.sh
+    fi
     echo "Installed SBCL" >/dev/stderr
 
     ${ASDF_INSTALL_PATH}/bin/sbcl --version
