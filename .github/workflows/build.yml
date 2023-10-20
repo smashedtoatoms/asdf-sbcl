@@ -22,6 +22,8 @@ jobs:
   mac:
     runs-on: macos-latest
     steps:
+      - name: install dependencies
+        run: brew install zstd ecl curl jq
       - name: asdf plugin test
         uses: asdf-vm/actions/plugin-test@v1
         with:
