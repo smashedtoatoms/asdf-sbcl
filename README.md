@@ -16,10 +16,10 @@ need.
 
 SBCL is compiled using itself, or any other Common Lisp.  I would love
 to use a publicly available older SBCL version to bootstrap the new one
-like i have done for years, and as I still do for linux, but on MacOS
+like I have done for years, and as I still do for Linux, but on MacOS
 Ventura the old builds don't run anymore due to mmap errors.  To deal
 with that, I now use ecl for mac builds which is an embeddable common
-lisp that is widely available via package managers.
+lisp that is widely available via package managers, though quite slow.
 
 I have chosen a few useful options by default to make it easier to
 generate compressed images of multithreaded apps that make use of
@@ -40,16 +40,19 @@ latest versions of SBCL. You will need to make sure you have zstd
 installed via your favorite package manager and make sure your CPATH and
 LIBRARY_PATH point to them. If you're on a mac, you also need to have
 your command line tools in your path in your ~/.zshrc. For example, if
-you're using brew on an M1 or M2 mac, install zstd with `brew install zstd` and then install sbcl with `CPATH=/opt/homebrew/include:$CPATH LIBRARY_PATH=/opt/homebrew/lib:$LIBRARY_PATH PATH=/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib:$PATH asdf install 2.3.9`. Be sure to thank apple for this hellscape. If
-you're using asdf, install zstd with `sudo apt-get install libzstd-dev`
-and let it rip. Other distros will need to install it in whatever way
-they normally install.
+you're using brew on an M1 or M2 mac, install zstd with `brew install zstd` 
+and then install sbcl with `LIBRARY_PATH=$(brew --prefix)/lib CPATH=$(brew 
+--prefix)/include asdf install sbcl 2.4.9`. Be sure to thank Apple for this 
+hellscape. If you're using asdf, install zstd with `sudo apt-get install 
+libzstd-dev` and let it rip. Other distros will need to install it in 
+whatever way they usually install.
 
 ### Requirements
 
 - [jq](https://stedolan.github.io/jq/)
 - [curl](https://curl.haxx.se/)
 - [libzstd-dev](https://github.com/facebook/zstd)
+- [zlib] on macs
 - [ecl](https://ecl.common-lisp.dev) on macs
 
 ### Install Plugin
@@ -69,13 +72,19 @@ asdf list-all sbcl
 Install a candidate listed from the previous command like this:
 
 ```
-asdf install sbcl 2.3.9
+asdf install sbcl 2.4.9
+```
+
+On Macs, the installer can screw up because it can't find zlib, despite it being installed.  You will get an error that says something like `fatal error: 'zstd.h' file not found`.  If that happens, and you have libz installed via brew, try installing like this:
+
+```
+LIBRARY_PATH=$(brew --prefix)/lib CPATH=$(brew --prefix)/include asdf install sbcl 2.4.9
 ```
 
 Select an installed candidate for use like this:
 
 ```
-asdf global sbcl 2.3.9
+asdf global sbcl 2.4.9
 ```
 
 ### Custom compile flags
